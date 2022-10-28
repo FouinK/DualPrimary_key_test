@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 @EqualsAndHashCode
 //@IdClass(Orders.class)
-public class UserInfo implements Serializable {
+public class UserInfo extends BaseTimeEntity implements Serializable {
     protected UserInfo() {
     }
 
