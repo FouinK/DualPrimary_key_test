@@ -1,5 +1,6 @@
 package dualKey.dual.entity;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -30,7 +31,15 @@ public class UserInfo implements Serializable {
         return userInfo;
     }
 
+    @Builder
+    public UserInfo(UserId userId, String phone) {
+        this.userId = userId;
+        this.phone = phone;
+    }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
     /*
 
         @Id

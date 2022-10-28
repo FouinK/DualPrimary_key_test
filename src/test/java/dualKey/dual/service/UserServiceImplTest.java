@@ -2,6 +2,8 @@ package dualKey.dual.service;
 
 import dualKey.dual.entity.UserInfo;
 import dualKey.dual.entity.UserId;
+import dualKey.dual.repository.UserInfoRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -18,6 +23,8 @@ class UserServiceImplTest {
 
     @Autowired
     UserService userService;
+    @Autowired
+    UserInfoRepository userInfoRepository;
     @Autowired
     EntityManager em;
 
@@ -91,7 +98,24 @@ class UserServiceImplTest {
         });
 //
 
+    }
 
+    @Test
+    @DisplayName("Transactional 휴대폰 번호 업데이트 테스트")
+    public void phoneNumUpdate() {
+        // given
+        UserId userId = UserId.createUserId(1L, "userA");
+
+        UserInfo userA = UserInfo.createUserInfo(userId, "전화 번호 없음");
+        userService.join(userA);
+
+        // when
+        userService.updateUserInfo(userId, "010 - xxxx - xxxx");
+
+        // then
+        UserInfo findUser = userInfoRepository.findByUserId(userId).get();
+
+        assertThat(findUser.getPhone()).isEqualTo("010 - xxxx - xxxx");
     }
 
 }

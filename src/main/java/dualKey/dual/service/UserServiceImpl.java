@@ -5,6 +5,7 @@ import dualKey.dual.entity.UserInfo;
 import dualKey.dual.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,6 +23,14 @@ public class UserServiceImpl implements UserService {
 
         userInfoRepository.save(userInfo);
 
+    }
+
+    @Override
+    @Transactional
+    public void updateUserInfo(UserId userId, String changePhoneNum) {
+        UserInfo findUserInfo = userInfoRepository.findByUserId(userId).get();
+
+        findUserInfo.setPhone(changePhoneNum);
     }
 
     /**
