@@ -17,6 +17,7 @@ public class UserInfo extends BaseTimeEntity implements Serializable {
 
     @Id
     @EmbeddedId
+    @Column(name = "user_id")
     private UserId userId;
 
 
