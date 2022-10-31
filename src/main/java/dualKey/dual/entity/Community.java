@@ -13,7 +13,7 @@ public class Community {
     @Column(name = "community_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserInfo userInfo;
 
     @Column
@@ -25,6 +25,9 @@ public class Community {
     protected Community() {
     }
 
+    /**
+     * 커뮤니티 생성 매서드
+     */
     public static Community createCommunity(UserInfo userInfo, String title, String content) {
         Community community = new Community();
         community.userInfo = userInfo;
