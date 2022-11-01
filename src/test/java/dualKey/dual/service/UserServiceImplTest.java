@@ -2,6 +2,7 @@ package dualKey.dual.service;
 
 import dualKey.dual.entity.UserInfo;
 import dualKey.dual.entity.UserId;
+import dualKey.dual.exception.CustomException;
 import dualKey.dual.repository.UserInfoRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,12 +60,12 @@ class UserServiceImplTest {
         try {
             userService.join(userInfo);
             em.flush();
-        } catch (IllegalStateException e) {
+        } catch (CustomException e) {
             System.out.println(e.getMessage());
         }
 
 //        then
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(CustomException.class, () -> {
             userService.join(userInfo);
         });
     }
@@ -85,12 +86,12 @@ class UserServiceImplTest {
         // when
         try {
             userService.join(userB);
-        } catch (IllegalStateException e) {
+        } catch (CustomException e) {
             System.out.println(e.getMessage());
         }
 
         // then
-        assertThrows(IllegalStateException.class, () ->{
+        assertThrows(CustomException.class, () ->{
             userService.join(userB);
         });
 //

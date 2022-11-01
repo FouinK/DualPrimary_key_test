@@ -2,6 +2,7 @@ package dualKey.dual.service;
 
 import dualKey.dual.entity.UserId;
 import dualKey.dual.entity.UserInfo;
+import dualKey.dual.exception.CustomException;
 import dualKey.dual.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserInfoRepository userInfoRepository;
 
+    /**
+     * 회원가입 메서드
+     */
     @Override
     public void join(UserInfo userInfo) {
 
@@ -25,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     *  회원정보 업데이트 메서드
+     */
     @Override
     @Transactional
     public void updateUserInfo(UserId userId, String changePhoneNum) {
@@ -40,7 +47,7 @@ public class UserServiceImpl implements UserService {
     public void vaildateDuplicateUserInfo(UserId userId) {
         Optional<UserInfo> findUserInfo = userInfoRepository.findByUserId(userId);
         findUserInfo.ifPresent(userInfo -> {
-            throw new IllegalStateException("이미 회원이 존재함");
+            throw new CustomException("이미 회원이 존재함");
         });
 
 //        boolean check = userInfoRepository.existsByUserId(userId);
@@ -55,7 +62,7 @@ public class UserServiceImpl implements UserService {
      */
     public void validateHasNullUserId(UserId userId) {
         if (userId.getUsername() == null || userId.getId() == null) {
-            throw new IllegalStateException("메인 키 값은 NULL 일 수 없습니다.");
+            throw new CustomException("메인 키 값은 NULL 일 수 없습니다.");
         }
     }
 
