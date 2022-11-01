@@ -8,13 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -30,7 +31,7 @@ class CommunityServiceImplTest {
     EntityManager em;
 
     @Test
-    @DisplayName("")
+    @DisplayName("커뮤니티 생성")
     public void createCommunityTest() {
         // given
         Long id = 3L;
@@ -49,6 +50,7 @@ class CommunityServiceImplTest {
 
     @Test
     @DisplayName("영속성 테스트")
+    @Rollback(value = false)
     public void selectCommunity() {
         // given
         Long id = 3L;
@@ -58,7 +60,7 @@ class CommunityServiceImplTest {
         UserInfo userInfo = UserInfo.createUserInfo(userId, phone);
 
 //        userService.join(userInfo);
-//        em.persist(userInfo);
+        em.persist(userInfo);
 
 //        Optional<UserInfo> findUserInfo = userInfoRepository.findByUserId(userId);
 //        communityService.createCommunity(findUserInfo.get(), "title__", "content__");
@@ -73,6 +75,32 @@ class CommunityServiceImplTest {
         UserInfo communityUserInfo = selectCommunity.getUserInfo();
         System.out.println(communityUserInfo.getPhone());
 
+    }
+
+    @Test
+    @DisplayName("커뮤니티 페이지 테스트")
+    void findCommunityPageTest() {
+        // given
+        Long id = 3L;
+        String username = "테스트 회원명";
+        String phone = "01045839103";
+        UserId userId = UserId.createUserId(id, username);
+        UserInfo userInfo = UserInfo.createUserInfo(userId, phone);
+
+//        userService.join(userInfo);
+        em.persist(userInfo);
+
+//        Optional<UserInfo> findUserInfo = userInfoRepository.findByUserId(userId);
+//        communityService.createCommunity(findUserInfo.get(), "title__", "content__");
+
+        Community community = Community.createCommunity(userInfo, "title__", "content__");
+        em.persist(community);
+
+        //when
+        Page<Community> communityPage = communityService.findCommunityPage(Pageable.unpaged());
+
+        //then
+        System.out.println("communityPage = " + communityPage.getTotalPages());
 
     }
 }

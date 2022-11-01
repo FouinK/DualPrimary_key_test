@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 public class Community {
-
     @Id
     @GeneratedValue
     @Column(name = "community_id")
