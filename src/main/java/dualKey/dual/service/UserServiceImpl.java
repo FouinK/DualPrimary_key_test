@@ -44,7 +44,9 @@ public class UserServiceImpl implements UserService {
      * 화원 삭제 메서드
      */
     @Override
+    @Transactional
     public void deleteUserInfo(UserId userId) {
+
         validateNotHaveUserInfo(userId);
 
         userInfoRepository.deleteByUserId(userId);
