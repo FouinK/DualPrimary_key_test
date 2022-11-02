@@ -10,4 +10,7 @@ public interface UserService {
     void join(UserInfo userInfo);
 
     void updateUserInfo(UserId userId, String changePhoneNum);
+
+    void deleteUserInfo(UserId userId);
+
 }

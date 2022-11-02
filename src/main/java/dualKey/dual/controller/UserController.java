@@ -28,8 +28,9 @@ public class UserController {
             UserInfo userInfo = UserInfo.createUserInfo(userId, map.get("phone"));
             userService.join(userInfo);
         } catch (NumberFormatException e) {
-            throw new CustomException("id 값을 파싱할 수 없습니다. ");
+            throw new CustomException("id 값 입력이 잘못되었습니다.");
         }
         return ResponseEntity.ok("회원가입 완료");
     }
+
 }

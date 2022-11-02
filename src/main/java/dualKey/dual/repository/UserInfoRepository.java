@@ -12,4 +12,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
     boolean existsByUserId(UserId userId);
 
     Optional<UserInfo> findByUserId(UserId userId);
+
+    void deleteByUserId(UserId userId);
 }

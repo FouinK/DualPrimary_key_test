@@ -1,16 +1,23 @@
 package dualKey.dual.service;
 
+import dualKey.dual.entity.Community;
 import dualKey.dual.entity.UserInfo;
 import dualKey.dual.entity.UserId;
 import dualKey.dual.exception.CustomException;
+import dualKey.dual.repository.CommunityRepository;
 import dualKey.dual.repository.UserInfoRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +29,11 @@ class UserServiceImplTest {
     @Autowired
     UserService userService;
     @Autowired
+    CommunityService communityService;
+    @Autowired
     UserInfoRepository userInfoRepository;
+    @Autowired
+    CommunityRepository communityRepository;
     @Autowired
     EntityManager em;
 
@@ -114,6 +125,56 @@ class UserServiceImplTest {
         UserInfo findUser = userInfoRepository.findByUserId(userId).get();
 
         assertThat(findUser.getPhone()).isEqualTo("010 - xxxx - xxxx");
+    }
+
+    @Test
+    @DisplayName("회원 삭제 테스트")
+    @Rollback(value = false)
+    public void deleteUserInfoTest() {
+        // given
+        UserId userId = UserId.createUserId(1L, "userA");
+
+        UserInfo userA = UserInfo.createUserInfo(userId, "전화 번호 없음");
+        userService.join(userA);
+
+        // when
+        userService.deleteUserInfo(userId);
+
+        // then
+        assertThrows(NoSuchElementException.class, ()->{
+            userInfoRepository.findByUserId(userId).get();
+        });
+    }
+
+    @Test
+    @DisplayName("커뮤니티 생성한 회원정보 삭제")
+    @Rollback(value = false)
+    public void deleteUserInfoAndCommunityTest() {
+        // given
+        UserId userId = UserId.createUserId(1L, "userA");
+//
+        UserInfo userA = UserInfo.createUserInfo(userId, "전화 번호 없음");
+        userService.join(userA);
+        UserInfo findUserInfo = userInfoRepository.findByUserId(userId).get();
+        communityService.createCommunity(findUserInfo, "title", "comment");
+
+        Community findCommunity = communityRepository.findById(1L).get();
+
+        System.out.println("저장된 커뮤니티 타이틀 값 : "+findCommunity.getTitle());
+
+        em.clear();
+
+        // when
+        userService.deleteUserInfo(findUserInfo.getUserId());
+
+        // then
+        assertThrows(NoSuchElementException.class, () -> {
+            userInfoRepository.findByUserId(userId).get();
+        });
+
+        assertThrows(NoSuchElementException.class, () -> {
+            communityRepository.findById(1L).get();
+        });
     }
 
 }

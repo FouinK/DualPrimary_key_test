@@ -34,4 +34,8 @@ public class Community {
         community.content = content;
         return community;
     }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
 }

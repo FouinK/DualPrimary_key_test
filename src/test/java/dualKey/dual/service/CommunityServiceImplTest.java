@@ -32,6 +32,7 @@ class CommunityServiceImplTest {
 
     @Test
     @DisplayName("커뮤니티 생성")
+    @Rollback(value = false)
     public void createCommunityTest() {
         // given
         Long id = 3L;

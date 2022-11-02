@@ -41,8 +41,27 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 화원 삭제 메서드
+     */
+    @Override
+    public void deleteUserInfo(UserId userId) {
+        validateNotHaveUserInfo(userId);
+
+        userInfoRepository.deleteByUserId(userId);
+    }
+
+    /**
+     * 회원 삭제 시 회원 존재 하지 않을 경우
+     */
+    public void validateNotHaveUserInfo(UserId userId) {
+        Optional<UserInfo> findUserInfo = userInfoRepository.findByUserId(userId);
+        findUserInfo.orElseThrow(
+                () -> new CustomException("회원이 존재하지 않으므로 삭제할 수 업습니다.")
+        );
+    }
+
+    /**
      * 중복회원 검사
-     * @param userId
      */
     public void vaildateDuplicateUserInfo(UserId userId) {
         Optional<UserInfo> findUserInfo = userInfoRepository.findByUserId(userId);
@@ -58,7 +77,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 메인키 널 값 검사
-     * @param userId
      */
     public void validateHasNullUserId(UserId userId) {
         if (userId.getUsername() == null || userId.getId() == null) {

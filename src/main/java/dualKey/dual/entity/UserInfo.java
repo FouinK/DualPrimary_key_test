@@ -6,6 +6,8 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,8 +26,8 @@ public class UserInfo extends BaseTimeEntity implements Serializable {
     @Column(name = "userPhone")
     private String phone;
 
-
     public static UserInfo createUserInfo(UserId userId, String phone) {
+
         UserInfo userInfo = new UserInfo();
         userInfo.userId = userId;
         userInfo.phone = phone;
@@ -41,6 +43,8 @@ public class UserInfo extends BaseTimeEntity implements Serializable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+
     /*
 
         @Id
