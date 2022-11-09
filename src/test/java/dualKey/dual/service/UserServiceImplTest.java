@@ -15,6 +15,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.transaction.*;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -37,6 +38,7 @@ class UserServiceImplTest {
     @Autowired
     EntityManager em;
 
+
     @Test
     @DisplayName("듀얼 키 인설트 테스트")
     @Transactional
@@ -53,6 +55,11 @@ class UserServiceImplTest {
         userService.join(userInfo);
 
         // then
+        UserInfo findUserInfo = userInfoRepository.findByUserId(userId).get();
+        System.out.println(findUserInfo.getUserId().getId());
+        System.out.println(findUserInfo.getUserId().getUsername());
+        System.out.println(findUserInfo.getPhone());
+
     }
 
     @Test
@@ -175,6 +182,70 @@ class UserServiceImplTest {
         assertThrows(NoSuchElementException.class, () -> {
             communityRepository.findById(1L).get();
         });
+    }
+
+    @Test
+    @DisplayName("1차 캐시 테스트")
+    public void 일차캐시테스트() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException {
+        // given
+        Long id = 3L;
+        String username = "테스트 회원명";
+        String phone = "01045839103";
+        UserId userId = UserId.createUserId(id, username);
+
+        UserInfo userInfo = UserInfo.createUserInfo(userId, phone);
+
+        em.persist(userInfo);
+//        userService.join(userInfo);
+//        em.clear();
+        // when
+        UserInfo firstUserInfo = em.find(UserInfo.class, userId);
+        UserInfo secondUserInfo = em.find(UserInfo.class, userId);
+        System.out.println("------");       //commit 후 쿼리문 날림
+        em.flush();
+
+//        em.flush();
+//        UserInfo findUserInfo = userInfoRepository.findByUserId(userId).get();
+//        UserInfo secondUserInfo = userInfoRepository.findByUserId(userId).get();
+        // then
+        Assertions.assertThat(firstUserInfo).isEqualTo(secondUserInfo);
+        System.out.println(userInfo.getClass());
+        System.out.println(firstUserInfo.getClass());
+        System.out.println(secondUserInfo.getClass());
+
+    }
+
+    @Test
+    @DisplayName("일차캐시테스트_EM_미사용")
+    @Transactional
+    public void 일차캐시테스트_EM_미사용() {
+        // given
+        Long id = 3L;
+        String username = "테스트 회원명";
+        String phone = "01045839103";
+        UserId userId = UserId.createUserId(id, username);
+
+        UserInfo userInfo = UserInfo.createUserInfo(userId, phone);
+
+//        em.persist(userInfo);
+        userService.join(userInfo);
+        System.out.println("-----");
+//        em.flush();
+//        em.clear();
+        // when
+//        UserInfo firstUserInfo = em.find(UserInfo.class, userId);
+//        UserInfo secondUserInfo = em.find(UserInfo.class, userId);
+
+        em.flush();
+
+        UserInfo findUserInfo = userInfoRepository.findByUserId(userId).get();
+        UserInfo secondUserInfo = userInfoRepository.findByUserId(userId).get();
+
+        // then
+        Assertions.assertThat(findUserInfo).isEqualTo(secondUserInfo);
+        System.out.println(userInfo.getClass());
+        System.out.println(findUserInfo.getClass());
+        System.out.println(secondUserInfo.getClass());
     }
 
 }

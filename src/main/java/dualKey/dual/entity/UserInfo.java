@@ -34,11 +34,11 @@ public class UserInfo extends BaseTimeEntity implements Serializable {
         return userInfo;
     }
 
-    @Builder
-    public UserInfo(UserId userId, String phone) {
-        this.userId = userId;
-        this.phone = phone;
-    }
+//    @Builder
+//    public UserInfo(UserId userId, String phone) {
+//        this.userId = userId;
+//        this.phone = phone;
+//    }
 
     public void setPhone(String phone) {
         this.phone = phone;

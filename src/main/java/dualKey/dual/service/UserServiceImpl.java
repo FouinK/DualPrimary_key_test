@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
      * 회원가입 메서드
      */
     @Override
+    @Transactional
     public void join(UserInfo userInfo) {
 
         validateHasNullUserId(userInfo.getUserId());
