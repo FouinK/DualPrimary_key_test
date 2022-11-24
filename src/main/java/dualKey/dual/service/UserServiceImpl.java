@@ -3,7 +3,7 @@ package dualKey.dual.service;
 import dualKey.dual.entity.UserId;
 import dualKey.dual.entity.UserInfo;
 import dualKey.dual.exception.CustomException;
-import dualKey.dual.repository.UserInfoRepository;
+import dualKey.dual.repository.UserInfoInfoDslRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserInfoRepository userInfoRepository;
+    private final UserInfoInfoDslRepository userInfoRepository;
 
     /**
      * 회원가입 메서드

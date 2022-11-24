@@ -5,8 +5,9 @@ import dualKey.dual.entity.UserInfo;
 import dualKey.dual.entity.UserId;
 import dualKey.dual.exception.CustomException;
 import dualKey.dual.repository.CommunityRepository;
-import dualKey.dual.repository.UserInfoRepository;
+import dualKey.dual.repository.UserInfoInfoDslRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.*;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,11 +32,26 @@ class UserServiceImplTest {
     @Autowired
     CommunityService communityService;
     @Autowired
-    UserInfoRepository userInfoRepository;
+    UserInfoInfoDslRepository userInfoRepository;
     @Autowired
     CommunityRepository communityRepository;
     @Autowired
     EntityManager em;
+
+
+    @BeforeEach
+    public void dbinit() {
+        Long id = 3L;
+        String username = "테스트 회원명";
+        String phone = "01045839103";
+        UserId userId = UserId.createUserId(id, username);
+
+        UserInfo userInfo = UserInfo.createUserInfo(userId, phone);
+
+        // when
+        userService.join(userInfo);
+
+    }
 
 
     @Test
@@ -65,7 +80,6 @@ class UserServiceImplTest {
     @Test
     @DisplayName("듀얼키 하나 존재하지 않는 예외 테스트")
     @Transactional
-//    @Rollback(value = false)
     public void dualKey_insertExceptionTest() {
         // given
         long id = 1L;
@@ -246,6 +260,17 @@ class UserServiceImplTest {
         System.out.println(userInfo.getClass());
         System.out.println(findUserInfo.getClass());
         System.out.println(secondUserInfo.getClass());
+    }
+
+    @Test
+    @DisplayName("updatePhone")
+    @Rollback(value = false)
+    public void updateUserInfo() {
+        // given
+        // when
+        userInfoRepository.changePhone("0101010");
+
+        // then
     }
 
 }

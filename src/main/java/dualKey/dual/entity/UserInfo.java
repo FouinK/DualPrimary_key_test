@@ -1,21 +1,15 @@
 package dualKey.dual.entity;
 
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @EqualsAndHashCode
-//@IdClass(Orders.class)
 public class UserInfo extends BaseTimeEntity implements Serializable {
-    protected UserInfo() {
-    }
 
     @Id
     @EmbeddedId
@@ -23,7 +17,7 @@ public class UserInfo extends BaseTimeEntity implements Serializable {
     private UserId userId;
 
 
-    @Column(name = "userPhone")
+//    @Column(name = "userPhone")
     private String phone;
 
     public static UserInfo createUserInfo(UserId userId, String phone) {
@@ -33,6 +27,10 @@ public class UserInfo extends BaseTimeEntity implements Serializable {
         userInfo.phone = phone;
         return userInfo;
     }
+
+    protected UserInfo() {
+    }
+
 
 //    @Builder
 //    public UserInfo(UserId userId, String phone) {

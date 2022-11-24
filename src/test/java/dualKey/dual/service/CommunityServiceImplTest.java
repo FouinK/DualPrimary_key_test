@@ -3,7 +3,7 @@ package dualKey.dual.service;
 import dualKey.dual.entity.Community;
 import dualKey.dual.entity.UserId;
 import dualKey.dual.entity.UserInfo;
-import dualKey.dual.repository.UserInfoRepository;
+import dualKey.dual.repository.UserInfoInfoDslRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ class CommunityServiceImplTest {
     @Autowired
     UserService userService;
     @Autowired
-    UserInfoRepository userInfoRepository;
+    UserInfoInfoDslRepository userInfoRepository;
     @Autowired
     CommunityService communityService;
     @Autowired
